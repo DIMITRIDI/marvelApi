@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import MarvelService from '../../services/MarvelService';
+import useMarvelService from '../../services/MarvelService';
 import ErrorMessage from '../errorMessage/ErrorMessage';
 import Spinner from '../spinner/Spinner';
 
@@ -9,11 +9,7 @@ import mjolnir from '../../resources/img/mjolnir.png';
 const RandomChar = () => {
 
    const [char, setChar] = useState(null);
-   const [loading, setLoading] = useState(true);
-   const [error, setError] = useState(false);
-
-
-   const marvelService = new MarvelService();
+   const {loading, error, getCharacter, clearError} = useMarvelService();
 
    useEffect(() => {
       updateChar();
@@ -26,25 +22,13 @@ const RandomChar = () => {
 
    const onCharLoaded = (char) => {
       setChar(char);
-      setLoading(false);
-   }
-
-   const onCharLoading = () => {
-      setLoading(true);
-   }
-
-   const onError = () => {
-      setLoading(false);
-      setError(true);
    }
 
    const updateChar = () => {
+      clearError();
       const id = Math.floor(Math.random() * (1011400 - 1011000) + 1011000);
-      onCharLoading();
-      marvelService
-         .getCharacter(id)
+      getCharacter(id)
          .then(onCharLoaded)
-         .catch(onError);
    }
 
       const errorMessage = error ? <ErrorMessage/> : null;
@@ -64,7 +48,7 @@ const RandomChar = () => {
                <p className="randomchar__title">
                   Or choose another one
                </p>
-               <button onClick={this.updateChar} className="button button__main">
+               <button onClick={updateChar} className="button button__main">
                   <div className="inner">try it</div>
                </button>
                <img src={mjolnir} alt="mjolnir" className="randomchar__decoration"/>
