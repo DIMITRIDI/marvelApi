@@ -33,6 +33,7 @@ const SingleComicPage = () => {
 
    return (
       <>
+         <AppBanner/>
          {errorMessage}
          {spinner}
          {content}
